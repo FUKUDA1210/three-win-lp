@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Three-Win | クリニック・医療法人 カード決済導入サポート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   DESIGN TOKENS
+   すべてのサイズは4の倍数
+══════════════════════════════════════ */
+:root {
+  /* Colors */
+  --navy:        #0d1b2e;
+  --navy-mid:    #162538;
+  --navy-light:  #1e3248;
+  --gold:        #b8963e;
+  --gold-light:  #d4af62;
+  --silver:      #a8b4c0;
+  --silver-light:#d4dce4;
+  --white:       #ffffff;
+  --off-white:   #f7f8fa;
+  --gray-light:  #eef0f3;
+  --gray-mid:    #c8d0d8;
+  --text-dark:   #1a1a2e;
+  --text-mid:    #4a5568;
+  --text-light:  #8896a8;
+
+  /* Typography — 4の倍数 */
+  --text-12: 12px;
+  --text-16: 16px;
+  --text-20: 20px;
+  --text-24: 24px;
+  --text-28: 28px;
+  --text-32: 32px;
+
+  /* Spacing — 4の倍数 */
+  --sp-4:  4px;
+  --sp-8:  8px;
+  --sp-12: 12px;
+  --sp-16: 16px;
+  --sp-20: 20px;
+  --sp-24: 24px;
+  --sp-32: 32px;
+  --sp-40: 40px;
+  --sp-48: 48px;
+  --sp-56: 56px;
+  --sp-64: 64px;
+  --sp-80: 80px;
+
+  /* Layout */
+  --max-w: 480px;
+  --pad:   20px;
+}
+
+/* ── RESET ── */
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: var(--text-16);
+  line-height: 1.8;
+  color: var(--text-dark);
+  background: var(--white);
+  max-width: var(--max-w);
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════════════
+   HEADER
+══════════════════════════════════════ */
+.header {
+  position: fixed;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: var(--max-w);
+  z-index: 100;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(12px);
+  padding: var(--sp-16) var(--pad);
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(184,150,62,0.2);
+}
+.header-logo {
+  font-family: 'Poppins', sans-serif;
+  font-size: var(--text-16);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--gold-light);
+  letter-spacing: 0.08em;
+}
+.header-cta {
+  padding: var(--sp-8) var(--sp-16);
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border: none;
+  color: var(--navy);
+  font-size: var(--text-12);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+}
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+.hero {
+  min-height: 100svh;
+  background: var(--navy);
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; overflow: hidden;
+  padding: 96px var(--pad) var(--sp-80);
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(184,150,62,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(184,150,62,.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.hero::after {
+  content: '';
+  position: absolute; top: -20%; right: -30%;
+  width: 90%; height: 100%; pointer-events: none;
+  background: radial-gradient(ellipse, rgba(184,150,62,.07) 0%, transparent 60%);
+}
+.hero-inner { position: relative; z-index: 2; }
+
+.hero-label {
+  display: inline-block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: var(--text-12);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border-top: 1px solid rgba(184,150,62,0.4);
+  border-bottom: 1px solid rgba(184,150,62,0.4);
+  padding: var(--sp-8) var(--sp-16);
+  margin-bottom: var(--sp-32);
+  opacity: 0;
+  animation: fadeUp .6s ease .1s forwards;
+}
+.hero-headline {
+  font-family: 'Noto Serif JP', serif;
+  font-size: var(--text-28);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  margin-bottom: var(--sp-24);
+  opacity: 0;
+  animation: fadeUp .6s ease .25s forwards;
+}
+.hero-headline span {
+  color: var(--gold-light);
+}
+.hero-rule { display: none; }
+.hero-sub {
+  font-family: 'Noto Serif JP', serif;
+  font-size: var(--text-16);
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.9;
+  margin-bottom: var(--sp-32);
+  opacity: 0;
+  animation: fadeUp .6s ease .5s forwards;
+}
+.hero-cta {
+  opacity: 0;
+  animation: fadeUp .6s ease .64s forwards;
+  margin-bottom: var(--sp-20);
+}
+.btn-primary {
+  display: block; width: 100%;
+  padding: var(--sp-20) var(--pad);
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--navy);
+  font-size: var(--text-16);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  box-shadow: 0 4px 24px rgba(184,150,62,.28);
+}
+.hero-note {
+  font-size: var(--text-12);
+  color: rgba(168,180,192,.6);
+  line-height: 1.8;
+  opacity: 0;
+  animation: fadeUp .6s ease .76s forwards;
+}
+
+/* ══════════════════════════════════════
+   SECTION BASE
+══════════════════════════════════════ */
+.section {
+  padding: var(--sp-64) var(--pad);
+  position: relative;
+}
+.section::before {
+  content: '';
+  position: absolute; top: 0; left: var(--pad); right: var(--pad);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gray-mid), transparent);
+}
+.section--navy {
+  background: var(--navy);
+}
+.section--navy::before {
+  background: linear-gradient(90deg, transparent, rgba(184,150,62,.2), transparent);
+}
+.section--gray { background: var(--off-white); }
+.section--white { background: var(--white); }
+.section--gray-dark { background: #f0f2f5; }
+
+.s-label {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: var(--text-12);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: var(--sp-12);
+  text-align: center;
+}
+.s-head {
+  font-family: 'Noto Serif JP', serif;
+  font-size: var(--text-24);
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+  text-align: center;
+  padding-bottom: var(--sp-16);
+  position: relative;
+  margin-bottom: var(--sp-32);
+}
+.s-head::after {
+  content: '';
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 28px; height: 2px;
+  background: var(--gold);
+}
+.s-head--light { color: var(--white); }
+
+/* ══════════════════════════════════════
+   PROBLEM SECTION
+══════════════════════════════════════ */
+.problem-intro {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: var(--text-16);
+  font-weight: 500;
+  color: var(--text-mid);
+  line-height: 2;
+  margin-bottom: var(--sp-32);
+}
+.payment-list {
+  list-style: disc;
+  padding-left: var(--sp-20);
+  margin-bottom: var(--sp-32);
+  display: flex; flex-direction: column; gap: var(--sp-8);
+}
+.payment-list li {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: var(--text-16);
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+.problem-body {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: var(--text-16);
+  font-weight: 500;
+  color: var(--text-mid);
+  line-height: 2;
+  margin-bottom: var(--sp-32);
+}
+.problem-body strong { color: var(--text-dark); font-weight: 700; }
+
+/* 転換ブロック */
+.pivot {
+  padding: var(--sp-32) var(--pad);
+  background: var(--gray-light);
+  border: none;
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+}
+.pivot::after { content: none; }
+.pivot p {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #000000;
+  line-height: 1.8;
+}
+.pivot p span { color: #000000; }
+
+/* 帯アニメーション */
+.pivot-line {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: var(--sp-4);
+}
+.pivot-line::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: var(--navy);
+  animation: wipe 0.5s cubic-bezier(.77,0,.18,1) forwards;
+  animation-play-state: paused;
+}
+.pivot-line.wipe-go::after {
+  animation-play-state: running;
+}
+@keyframes wipe {
+  0%   { left: -100%; }
+  49%  { left: 0%; }
+  50%  { left: 0%; }
+  100% { left: 100%; }
+}
+.pivot-line span {
+  display: inline-block;
+  opacity: 0;
+  transition: opacity 0s;
+}
+.pivot-line.wipe-go span {
+  opacity: 1;
+  transition-delay: 0.25s;
+}
+
+/* ══════════════════════════════════════
+   SERVICE SECTION
+══════════════════════════════════════ */
+.service-body {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: var(--text-16);
+  font-weight: 500;
+  color: var(--text-mid);
+  line-height: 2;
+  margin-bottom: var(--sp-32);
+}
+.feature-lead {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: var(--text-16);
+  font-weight: 500;
+  color: var(--text-mid);
+  text-align: center;
+  margin-bottom: var(--sp-16);
+}
+.features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-8);
+}
+.feat {
+  padding: var(--sp-20) var(--sp-16);
+  border: 1px solid var(--gray-mid);
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: var(--sp-8);
+  text-align: center;
+}
+.feat--filled { background: var(--navy-light); }
+.feat--outlined { background: var(--gray-light); }
+.feat-num {
+  font-family: 'Poppins', sans-serif;
+  font-size: 40px;
+  font-weight: 600;
+  color: var(--text-dark);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+}
+.feat-num .unit {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+.feat-title {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: var(--text-16);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.5;
+}
+.feat--outlined .feat-title { color: var(--text-dark); }
+.feat-list {
+  display: flex; flex-direction: column; gap: var(--sp-8);
+}
+.feat-list-item {
+  display: flex; align-items: center; gap: var(--sp-8);
+  font-size: var(--text-16);
+  font-weight: 700;
+  color: var(--text-mid);
+  line-height: 1.4;
+}
+.feat-list-item span:first-child { font-size: var(--text-16); }
+.feat-brands {
+  display: flex; flex-wrap: wrap; gap: var(--sp-4);
+  margin-top: var(--sp-4);
+}
+.brand {
+  font-family: 'Poppins', sans-serif;
+  font-size: var(--text-12);
+  font-weight: 600;
+  padding: var(--sp-4) var(--sp-8);
+  border: 1px solid var(--gray-mid);
+  color: var(--text-dark);
+  letter-spacing: 0.04em;
+}
+
+/* ══════════════════════════════════════
+   VIDEO SECTION
+══════════════════════════════════════ */
+.video-sub {
+  display: flex; justify-content: center;
+  margin-bottom: var(--sp-20);
+}
+.video-sub span {
+  font-size: var(--text-16);
+  font-weight: 400;
+  color: var(--text-mid);
+  background: var(--gray-light);
+  padding: var(--sp-8) var(--sp-20);
+  letter-spacing: 0.04em;
+}
+.video-box {
+  position: relative; width: 100%; padding-bottom: 56.25%;
+  background: var(--navy);
+  border: 1px solid rgba(184,150,62,.2);
+  box-shadow: 0 8px 32px rgba(13,27,46,.16);
+}
+.video-box iframe {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+}
+.video-ph {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: var(--sp-16);
+}
+.video-play {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: rgba(184,150,62,.12);
+  border: 1px solid rgba(184,150,62,.4);
+  display: flex; align-items: center; justify-content: center;
+}
+.video-play::after {
+  content: '';
+  width: 0; height: 0;
+  border-left: 22px solid var(--gold);
+  border-top: 13px solid transparent;
+  border-bottom: 13px solid transparent;
+  margin-left: 5px;
+}
+.video-ph p { font-size: var(--text-12); color: var(--silver); letter-spacing: .08em; }
+.video-caption {
+  margin-top: var(--sp-16);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: var(--text-16);
+  font-weight: 500;
+  color: var(--text-mid);
+  line-height: 1.8;
+  text-align: center;
+}
+
+/* ══════════════════════════════════════
+   TARGET SECTION
+══════════════════════════════════════ */
+.target-lead {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: var(--text-16);
+  font-weight: 500;
+  color: var(--text-mid);
+  line-height: 1.8;
+  text-align: center;
+  margin-bottom: var(--sp-24);
+}
+.target-list {
+  display: flex; flex-direction: column; gap: var(--sp-8);
+}
+.target-item {
+  display: flex; align-items: center; gap: var(--sp-12);
+  padding: var(--sp-16) var(--sp-20);
+  background: var(--off-white);
+  border: 1px solid var(--gray-light);
+}
+.t-check {
+  width: 20px; height: 20px; min-width: 20px;
+  border: 1px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.t-check::after {
+  content: '';
+  width: 7px; height: 4px;
+  border-left: 1.5px solid var(--gold);
+  border-bottom: 1.5px solid var(--gold);
+  transform: rotate(-45deg) translateY(-1px);
+}
+.t-text {
+  font-size: var(--text-16);
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.5;
+}
+
+/* ══════════════════════════════════════
+   PRE-FORM
+══════════════════════════════════════ */
+.pre-form {
+  padding: var(--sp-48) var(--pad);
+  background: var(--off-white);
+  text-align: center;
+  position: relative;
+}
+.pre-form::before {
+  content: '';
+  position: absolute; top: 0; left: var(--pad); right: var(--pad);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gray-mid), transparent);
+}
+.pre-form-main {
+  font-family: 'Noto Serif JP', serif;
+  font-size: var(--text-20);
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.7;
+  margin-bottom: var(--sp-12);
+}
+.pre-form-sub {
+  font-size: var(--text-16);
+  color: var(--text-mid);
+  line-height: 1.8;
+  margin-bottom: var(--sp-8);
+}
+.pre-form-note {
+  font-size: var(--text-12);
+  color: var(--text-light);
+  line-height: 1.8;
+}
+
+/* ══════════════════════════════════════
+   FORM SECTION
+══════════════════════════════════════ */
+.form-lead {
+  font-size: var(--text-16);
+  color: var(--text-mid);
+  line-height: 1.8;
+  margin-bottom: var(--sp-24);
+}
+.form-wrap { background: var(--white); }
+.form-inner { padding: var(--sp-32) var(--sp-24); }
+.form-row {
+  display: flex; flex-direction: column; gap: var(--sp-8);
+  margin-bottom: var(--sp-20);
+}
+.form-row label {
+  font-size: var(--text-12);
+  font-weight: 500;
+  color: var(--navy);
+  letter-spacing: 0.04em;
+}
+.form-row label .req {
+  display: inline-block;
+  margin-left: var(--sp-4);
+  font-size: var(--text-12);
+  color: var(--gold);
+}
+.form-row input,
+.form-row select,
+.form-row textarea {
+  width: 100%;
+  padding: var(--sp-16);
+  border: 1px solid var(--gray-mid);
+  background: var(--off-white);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: var(--text-16);
+  color: var(--text-dark);
+  outline: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+.form-row textarea { resize: vertical; min-height: 80px; }
+.form-agree {
+  display: flex; align-items: flex-start; gap: var(--sp-12);
+  margin-bottom: var(--sp-24);
+}
+.form-agree input {
+  width: 20px; height: 20px; min-width: 20px;
+  margin-top: 2px;
+  accent-color: var(--gold);
+}
+.form-agree span {
+  font-size: var(--text-12);
+  color: var(--text-mid);
+  line-height: 1.8;
+}
+.form-submit {
+  display: block; width: 100%;
+  padding: var(--sp-20);
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--navy);
+  font-size: var(--text-16);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-align: center;
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(184,150,62,.28);
+}
+.form-dummy-note {
+  margin-top: var(--sp-16);
+  font-size: var(--text-12);
+  color: var(--text-light);
+  text-align: center;
+  line-height: 1.8;
+}
+
+/* ══════════════════════════════════════
+   DISCLAIMER
+══════════════════════════════════════ */
+.disc {
+  background: var(--navy-mid);
+  padding: var(--sp-48) var(--pad);
+  position: relative;
+}
+.disc::before {
+  content: '';
+  position: absolute; top: 0; left: var(--pad); right: var(--pad);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184,150,62,.2), transparent);
+}
+.disc-title {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: var(--text-12);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: var(--sp-20);
+}
+.disc-list {
+  list-style: none;
+  display: flex; flex-direction: column; gap: var(--sp-12);
+}
+.disc-list li {
+  font-size: var(--text-12);
+  color: rgba(168,180,192,.6);
+  line-height: 1.8;
+  padding-left: var(--sp-16);
+  position: relative;
+}
+.disc-list li::before {
+  content: '※';
+  position: absolute; left: 0;
+  color: rgba(184,150,62,.4);
+}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer {
+  background: var(--navy);
+  padding: var(--sp-24) var(--pad);
+  border-top: 1px solid rgba(184,150,62,.1);
+  text-align: center;
+}
+footer p {
+  font-size: var(--text-12);
+  color: rgba(168,180,192,.3);
+  letter-spacing: 0.1em;
+}
+
+/* ══════════════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════════════ */
+.r {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.r.v { opacity: 1; transform: translateY(0); }
+
+/* ══════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     HEADER
+══════════════════════════════════ -->
+<header class="header">
+  <div class="header-logo">Three-Win</div>
+  <a href="#form" class="header-cta">お問い合わせ</a>
+</header>
+
+<!-- ══════════════════════════════════
+     HERO
+══════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <h1 class="hero-headline">
+      クリニック経営者・医療法人の毎月の支払いが、<br>
+      <span>ポイント・マイルに変わる仕組みを知っていますか？</span>
+    </h1>
+    <div class="hero-rule"></div>
+    <p class="hero-sub" style="border-top:1px solid rgba(255,255,255,0.3);border-bottom:1px solid rgba(255,255,255,0.3);padding:var(--sp-16) 0">
+      MS法人・関連会社への支払いを、<br>
+      カード決済の仕組みで変える、新たな資産形成。
+    </p>
+    <p style="font-family:'Noto Sans JP',sans-serif;font-size:14px;color:#ffffff;text-align:center;margin-top:var(--sp-8);margin-bottom:var(--sp-8);line-height:1.8">
+      あなたのクリニック・法人でも導入可能か<br>▼まずはお問い合わせ下さい▼
+    </p>
+    <div class="hero-cta">
+      <a href="#form" class="btn-primary">お問い合わせはこちら</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     PROBLEM
+══════════════════════════════════ -->
+<section class="section section--white">
+  <span class="s-label r">Problem</span>
+  <h2 class="s-head r"><small style="font-size:20px;font-weight:700;display:block;margin-bottom:4px;color:var(--text-dark)">毎月の支払い、銀行振込だけで</small>終わっていませんか？</h2>
+
+  <p class="problem-intro r">
+    個人のクレジットカードでポイントやマイルを貯めている方は多いと思います。<br>
+    もし法人間の支払いでこれらの資産が貯まるとしたら...あなたは考えたことがありますか？
+  </p>
+
+  <ul class="payment-list r">
+    <li>管理料</li>
+    <li>業務委託費</li>
+    <li>広告費</li>
+    <li>採用費</li>
+    <li>事務代行費</li>
+    <li>賃料・不動産使用料</li>
+    <li>医療機器リース料</li>
+    <li>医療機器管理費</li>
+  </ul>
+
+  <p class="problem-body r">
+    これだけの支払いが、毎月銀行振込で消えていく...<br>
+    ポイントにもマイルにも、何も変わらずに。<br><br>
+    あなたは、<br>
+    <strong>この仕組みを知らないことで大きな機会損失になっているかもしれません。</strong>
+  </p>
+
+  <div class="pivot" id="pivot-block">
+    <p>
+      <span class="pivot-line"><span>実はこの支払いを</span></span>
+      <span class="pivot-line"><span>「仕組み化」することで</span></span>
+      <span class="pivot-line"><span>同じ支払いでも毎月のポイントとマイルを生み始めます。</span></span>
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     SERVICE
+══════════════════════════════════ -->
+<section class="section section--white">
+  <span class="s-label r">Service</span>
+  <h2 class="s-head r">
+    <span style="font-size:var(--text-16);font-weight:700;color:#000000">MS法人・関連会社への支払いを</span><br>カード決済できる形へ
+  </h2>
+
+  <p class="service-body r">
+    クリニック・医療法人からMS法人または関連会社への実態ある支払いを対象に、<strong>カード決済できる仕組みを導入することで、ポイント・マイルが継続的に積み上がり、</strong>福利厚生や社員旅行の原資としても活用できるようになります。<br><br>
+    さらに、カード決済の導入費用は0円で手数料は業界最低水準、各種ブランドにも対応しています。
+  </p>
+
+
+  <div class="features r" style="grid-template-columns:1fr">
+    <div class="feat feat--outlined">
+      <div class="feat-title">決済手数料</div>
+      <div class="feat-num">2.5<span class="unit">%〜</span></div>
+    </div>
+    <div class="feat feat--outlined">
+      <div class="feat-title">初期費用・導入費用</div>
+      <div class="feat-num"><span class="unit">¥</span>0</div>
+    </div>
+    <div class="feat feat--outlined">
+      <div class="feat-title">全ブランド利用可能</div>
+      <div class="feat-brands" style="margin-top:var(--sp-8)">
+        <span class="brand">VISA</span>
+        <span class="brand">Mastercard</span>
+        <span class="brand">JCB</span>
+        <span class="brand">AMEX</span>
+        <span class="brand">Diners</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     VIDEO
+══════════════════════════════════ -->
+<section class="section section--gray">
+  <span class="s-label r">Overview</span>
+  <h2 class="s-head r"><small style="font-size:20px;font-weight:700;display:block;margin-bottom:4px;color:var(--text-dark)">毎月の支払いをカード決済に変えると</small>どう変わる？</h2>
+  <div class="video-sub r">
+    <span>▼ 1分で解説 ▼</span>
+  </div>
+  <div class="video-box r">
+    <div class="video-ph">
+      <div class="video-play"></div>
+      <p>概要説明動画（YouTube）</p>
+    </div>
+    <!-- <iframe src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe> -->
+  </div>
+  <p class="video-caption r">クリニック・医療法人の実態ある法人支払いを、<br>カード決済できる仕組みに整えるサービスです。</p>
+</section>
+
+<!-- ══════════════════════════════════
+     TARGET
+══════════════════════════════════ -->
+<section class="section section--white">
+  <span class="s-label r">For You</span>
+  <h2 class="s-head r">こんな方が対象です</h2>
+  <div class="target-list">
+    <div class="target-item r"><div class="t-check"></div><div class="t-text">医療法人・個人クリニックを運営している</div></div>
+    <div class="target-item r"><div class="t-check"></div><div class="t-text">MS法人または関連会社を持っている</div></div>
+    <div class="target-item r"><div class="t-check"></div><div class="t-text">毎月100万円以上の法人支払いがある</div></div>
+    <div class="target-item r"><div class="t-check"></div><div class="t-text">MS法人・関連会社への契約書や請求書がある</div></div>
+    <div class="target-item r"><div class="t-check"></div><div class="t-text">美容クリニック・歯科医院を運営している</div></div>
+    <div class="target-item r"><div class="t-check"></div><div class="t-text">マイルやポイントを活用したい</div></div>
+    <div class="target-item r"><div class="t-check"></div><div class="t-text">福利厚生・社員旅行の原資を作りたい</div></div>
+    <div class="target-item r"><div class="t-check"></div><div class="t-text">Luxury Card・ANAカード・Marriott Bonvoyなどに関心がある</div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     PRE-FORM
+══════════════════════════════════ -->
+<div class="pre-form">
+  <p class="pre-form-main r">
+    「うちのクリニックでも使えるかな？」<br>
+    まずはお問い合わせください。
+  </p>
+  <p class="pre-form-sub r">
+    あなたのクリニック・法人でもカード決済化できるか、私たちがサポートいたします。
+  </p>
+</div>
+
+<!-- ══════════════════════════════════
+     FORM
+══════════════════════════════════ -->
+<section class="section section--navy" id="form">
+  <span class="s-label r">Contact</span>
+  <h2 class="s-head r" style="color:var(--white)">お問い合わせはこちら</h2>
+  <p class="form-lead r" style="color:var(--silver-light)">
+    ご状況をお聞きし、カード決済導入の可能性をご確認いたします。まずはお気軽にご入力ください。
+  </p>
+  <div class="form-wrap r">
+    <div class="form-inner">
+      <div class="form-row">
+        <label>お名前<span class="req">必須</span></label>
+        <input type="text" placeholder="山田 太郎">
+      </div>
+      <div class="form-row">
+        <label>クリニック名・法人名<span class="req">必須</span></label>
+        <input type="text" placeholder="〇〇クリニック">
+      </div>
+      <div class="form-row">
+        <label>電話番号<span class="req">必須</span></label>
+        <input type="tel" placeholder="090-0000-0000">
+      </div>
+      <div class="form-row">
+        <label>メールアドレス<span class="req">必須</span></label>
+        <input type="email" placeholder="info@example.com">
+      </div>
+      <div class="form-row">
+        <label>運営形態<span class="req">必須</span></label>
+        <select>
+          <option value="">選択してください</option>
+          <option>医療法人</option>
+          <option>個人クリニック</option>
+          <option>その他</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>MS法人・関連会社の有無<span class="req">必須</span></label>
+        <select>
+          <option value="">選択してください</option>
+          <option>あり</option>
+          <option>なし</option>
+          <option>検討中</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>毎月の法人支払い額（目安）</label>
+        <select>
+          <option value="">選択してください</option>
+          <option>100万円未満</option>
+          <option>100〜300万円</option>
+          <option>300〜500万円</option>
+          <option>500万円以上</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>顧問税理士・会計士</label>
+        <select>
+          <option value="">選択してください</option>
+          <option>あり</option>
+          <option>なし</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>その他ご相談内容</label>
+        <textarea placeholder="自由にご記入ください" rows="4"></textarea>
+      </div>
+      <div class="form-agree">
+        <input type="checkbox" id="agree">
+        <span><label for="agree">個人情報の取扱いに同意する</label></span>
+      </div>
+      <button class="form-submit" type="button">送信する</button>
+      <p class="form-dummy-note">※本フォームはダミーです。Googleフォーム準備後に差し替えます。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     DISCLAIMER
+══════════════════════════════════ -->
+<section class="disc">
+  <span class="disc-title">注意事項</span>
+  <ul class="disc-list">
+    <li>本サービスは、ポイント・マイル付与、ステータス維持、カード審査、決済審査を保証するものではありません。</li>
+    <li>個人カード立替や会計処理については、顧問税理士・会計士への確認が必要です。</li>
+    <li>架空取引・循環取引・実態のない取引は対象外です。</li>
+    <li>実態ある会社間取引を前提に、適切な形での導入可否を確認します。</li>
+  </ul>
+</section>
+
+<footer>
+  <p>&copy; 2025 Three-Win. All rights reserved.</p>
+</footer>
+
+<script>
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('v'), 60);
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+
+document.querySelectorAll('.r').forEach((el, i) => io.observe(el));
+
+document.querySelectorAll('.target-list .r').forEach((el, i) => {
+  el.style.transitionDelay = `${i * 48}ms`;
+});
+
+// pivot 帯アニメーション
+const pivotBlock = document.getElementById('pivot-block');
+if (pivotBlock) {
+  const pivotObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const lines = pivotBlock.querySelectorAll('.pivot-line');
+        lines.forEach((line, i) => {
+          setTimeout(() => {
+            line.style.setProperty('--delay', i * 0.12 + 's');
+            line.querySelector('::after');
+            line.classList.add('wipe-go');
+          }, i * 120);
+        });
+        pivotObs.unobserve(pivotBlock);
+      }
+    });
+  }, { threshold: 0.3 });
+  pivotObs.observe(pivotBlock);
+}
+</script>
+</body>
+</html>
